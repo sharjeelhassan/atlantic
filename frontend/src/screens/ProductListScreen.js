@@ -41,7 +41,7 @@ const ProductListScreen = (props) => {
       dispatch({ type: PRODUCT_DELETE_RESET });
     }
     dispatch(listProducts({ seller: sellerMode ? userInfo._id : '' }));
-  }, [dispatch, createdProduct, successCreate, successDelete, props.history, userInfo._id]);
+  }, [dispatch, createdProduct, successCreate, successDelete, props.history, userInfo._id, sellerMode]);
   const createHandler = () => {
     dispatch(createProduct());
   };
