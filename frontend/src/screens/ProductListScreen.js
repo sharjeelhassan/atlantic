@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
 import {
   createProduct,
   deleteProduct,
@@ -13,9 +14,10 @@ import {
 } from '../constants/productConstants';
 
 const ProductListScreen = (props) => {
+  const { pageNumber = 1 } = useParams();
   const sellerMode = props.match.path.indexOf('/seller') >= 0;
   const productList = useSelector((state) => state.productList);
-  const { loading, error, products } = productList;
+  const { loading, error, products, page, pages } = productList;
   const productCreate = useSelector((state) => state.productCreate);
   const {
     loading: loadingCreate,
@@ -40,8 +42,17 @@ const ProductListScreen = (props) => {
     if (successDelete) {
       dispatch({ type: PRODUCT_DELETE_RESET });
     }
-    dispatch(listProducts({ seller: sellerMode ? userInfo._id : '' }));
-  }, [dispatch, createdProduct, successCreate, successDelete, props.history, userInfo._id, sellerMode]);
+    dispatch(listProducts({ seller: sellerMode ? userInfo._id : '', pageNumber }));
+  }, [
+    dispatch,
+    createdProduct,
+    successCreate,
+    successDelete,
+    props.history,
+    userInfo._id,
+    sellerMode,
+    pageNumber
+  ]);
   const createHandler = () => {
     dispatch(createProduct());
   };
@@ -52,63 +63,76 @@ const ProductListScreen = (props) => {
   };
   return (
     <div>
-      <div className="row">
+      <div className='row'>
         <h1>Products</h1>
-        <button type="button" className="primary" onClick={createHandler}>
+        <button type='button' className='primary' onClick={createHandler}>
           Create Product
         </button>
       </div>
       {loadingDelete && <LoadingBox></LoadingBox>}
-      {errorDelete && <MessageBox variant="danger">{errorDelete}</MessageBox>}
+      {errorDelete && <MessageBox variant='danger'>{errorDelete}</MessageBox>}
 
       {loadingCreate && <LoadingBox></LoadingBox>}
-      {errorCreate && <MessageBox variant="danger">{errorCreate}</MessageBox>}
+      {errorCreate && <MessageBox variant='danger'>{errorCreate}</MessageBox>}
       {loading ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
-        <MessageBox variant="danger">{error}</MessageBox>
+        <MessageBox variant='danger'>{error}</MessageBox>
       ) : (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>NAME</th>
-              <th>PRICE</th>
-              <th>CATEGORY</th>
-              <th>BRAND</th>
-              <th>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr key={product._id}>
-                <td>{product._id}</td>
-                <td>{product.name}</td>
-                <td>{product.price}</td>
-                <td>{product.category}</td>
-                <td>{product.brand}</td>
-                <td>
-                  <button
-                    type="button"
-                    className="small"
-                    onClick={() =>
-                      props.history.push(`/product/${product._id}/edit`)
-                    }
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    className="small"
-                    onClick={() => deleteHandler(product)}
-                  >
-                    Delete
-                  </button>
-                </td>
+        <>
+          <table className='table'>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>PRICE</th>
+                <th>CATEGORY</th>
+                <th>BRAND</th>
+                <th>ACTIONS</th>
               </tr>
+            </thead>
+            <tbody>
+              {products.map((product) => (
+                <tr key={product._id}>
+                  <td>{product._id}</td>
+                  <td>{product.name}</td>
+                  <td>{product.price}</td>
+                  <td>{product.category}</td>
+                  <td>{product.brand}</td>
+                  <td>
+                    <button
+                      type='button'
+                      className='small'
+                      onClick={() =>
+                        props.history.push(`/product/${product._id}/edit`)
+                      }
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type='button'
+                      className='small'
+                      onClick={() => deleteHandler(product)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className='row center pagination'>
+            {[...Array(pages).keys()].map((x) => (
+              <Link
+                className={x + 1 === page ? 'active' : ''}
+                key={x + 1}
+                to={`/productlist/pageNumber/${x + 1}`}
+              >
+                {x + 1}
+              </Link>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </>
       )}
     </div>
   );

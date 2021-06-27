@@ -372,15 +372,15 @@ img.large {
 
 /* Search */
 .search button {
-border-radius: 0 0.5rem 0.5rem 0;
-border-right: none;
-margin-right: 0.5rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  border-right: none;
+  margin-right: 0.5rem;
 }
 
 .search input {
-border-radius: 0.5rem 0 0 0.5rem;
-border-right: none;
-margin-left: 0.5rem;
+  border-radius: 0.5rem 0 0 0.5rem;
+  border-right: none;
+  margin-left: 0.5rem;
 }
 
 .active {
@@ -409,4 +409,23 @@ margin-left: 0.5rem;
 .map-input-box button {
   border-radius: 0 1rem 1rem 0;
   border-left: 0;
+}
+
+/* Pagination */
+.pagination a {
+  padding: 1rem;
+  margin: 0.5rem;
+  border-radius: 0.5rem;
+  border: 0.1rem #a4a4a4 solid;
+  font-size: 1.6rem;
+  font-family: Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.pagination a.active {
+  font-weight: bold;
+  background-color: red;
+  color: white;
+  border-color: red;
 }
