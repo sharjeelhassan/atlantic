@@ -4,6 +4,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
+import os from "os-utils";
 import productRouter from './routers/productRouter.js';
 import userRouter from './routers/userRouter.js';
 import orderRouter from './routers/orderRouter.js';
@@ -56,7 +57,9 @@ const io = new Server(httpServer, { cors: { origin: '*' } });
 const users = [];
 
 io.on('connection', (socket) => {
+  // General
   socket.on('disconnect', () => {
+    // HelpDesk Handler
     const user = users.find((x) => x.socketId === socket.id);
     if (user) {
       user.online = false;
@@ -67,6 +70,16 @@ io.on('connection', (socket) => {
       }
     }
   });
+
+  // KPI
+  setInterval(() => {
+    os.cpuUsage((cpuPercent) => {
+      socket.emit('cpu', cpuPercent);
+    });
+  }, 1000);
+
+  // HelpDesk System
+  /**********************************************************/
 
   socket.on('onLogin', (user) => {
     const updatedUser = {
@@ -122,6 +135,8 @@ io.on('connection', (socket) => {
       }
     }
   });
+
+  /**********************************************************/
 });
 
 httpServer.listen(port, () => {

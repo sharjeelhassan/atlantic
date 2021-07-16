@@ -29,6 +29,7 @@ import LoadingBox from './components/LoadingBox';
 import MessageBox from './components/MessageBox';
 import MapScreen from './screens/MapScreen';
 import DashboardScreen from './screens/DashboardScreen';
+import KPIScreen from './screens/KPIScreen';
 import SupportScreen from './screens/SupportScreen';
 import ChatBox from './components/ChatBox';
 
@@ -131,6 +132,9 @@ function App() {
                 <ul className='dropdown-content'>
                   <li>
                     <Link to='/dashboard'>Dashboard</Link>
+                  </li>
+                  <li>
+                    <Link to='/kpi'>KPI</Link>
                   </li>
                   <li>
                     <Link to='/productlist'>Products</Link>
@@ -243,6 +247,10 @@ function App() {
           <AdminRoute
             path='/dashboard'
             component={DashboardScreen}
+          ></AdminRoute>
+          <AdminRoute
+            path='/kpi'
+            component={KPIScreen}
           ></AdminRoute>
           <AdminRoute path='/support' component={SupportScreen}></AdminRoute>
           <SellerRoute
