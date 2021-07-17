@@ -248,10 +248,7 @@ function App() {
             path='/dashboard'
             component={DashboardScreen}
           ></AdminRoute>
-          <AdminRoute
-            path='/kpi'
-            component={KPIScreen}
-          ></AdminRoute>
+          <AdminRoute path='/kpi' component={KPIScreen}></AdminRoute>
           <AdminRoute path='/support' component={SupportScreen}></AdminRoute>
           <SellerRoute
             path='/productlist/seller'
@@ -263,7 +260,7 @@ function App() {
           ></SellerRoute>
           <Route path='/seller/:id' component={SellerScreen}></Route>
         </main>
-        <footer className='row center'>
+        <footer className='row center'>          
           {userInfo && !userInfo.isAdmin && <ChatBox userInfo={userInfo} />}
           <div>All right reserved</div>{' '}
         </footer>
