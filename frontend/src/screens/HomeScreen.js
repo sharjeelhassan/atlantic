@@ -8,7 +8,6 @@ import MessageBox from '../components/MessageBox';
 import { listProducts } from '../actions/productActions';
 import { listTopSellers } from '../actions/userActions';
 import { Link } from 'react-router-dom';
-import useGeolocation from '../hooks/useGeoLocation';
 
 const HomeScreen = () => {
   const userTopSellersList = useSelector((state) => state.userTopSellersList);
@@ -20,8 +19,6 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
-
-  const location = useGeolocation();
 
   useEffect(() => {
     dispatch(listProducts({}));
@@ -49,10 +46,7 @@ const HomeScreen = () => {
           </Carousel>
         </>
       )}
-      <h2>Featured Products</h2>
-      {location.loaded
-            ? JSON.stringify(location)
-            : 'Location data not available'} <br/>
+      <h2>Featured Products</h2>     
       {loading ? (
         <LoadingBox></LoadingBox>
       ) : error ? (

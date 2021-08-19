@@ -73,7 +73,7 @@ const SupportScreen = () => {
         setMessages(allMessages);
       });
     }
-  }, [messages, socket, users]);
+  }, [messages, socket, users, userInfo]);
 
   const selectUser = (user) => {
     allSelectedUser = user;

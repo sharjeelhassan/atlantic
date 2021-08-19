@@ -1,3 +1,4 @@
+import socketIOClient from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Link, Route } from 'react-router-dom';
 import { signout } from './actions/userActions';
@@ -32,14 +33,27 @@ import DashboardScreen from './screens/DashboardScreen';
 import KPIScreen from './screens/KPIScreen';
 import SupportScreen from './screens/SupportScreen';
 import ChatBox from './components/ChatBox';
+import useGeoLocation from './hooks/useGeoLocation';
+import TrackerScreen from './screens/TrackerScreen';
 
-function App() {
+const ENDPOINT =
+  window.location.host.indexOf('localhost') >= 0
+    ? 'http://127.0.0.1:5000'
+    : window.location.host;
+
+const App = () => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
+
+  // GPS Location Emit
+  /*********************************************/
+  const [socket, setSocket] = useState(null);
+  const location = useGeoLocation();
+  /*********************************************/
 
   const dispatch = useDispatch();
   const signoutHandler = () => {
@@ -55,7 +69,20 @@ function App() {
 
   useEffect(() => {
     dispatch(listProductCategories());
-  }, [dispatch]);
+    if (!socket) {
+      const sk = socketIOClient(ENDPOINT);
+      setSocket(sk);
+    } else if(socket && userInfo && !userInfo.isAdmin) {
+      socket.emit('gpsCoordsFromUser', {
+        gpsInfo: location,
+        userInfo: {
+          _id: userInfo._id,
+          name: userInfo.name,
+          isAdmin: userInfo.isAdmin,
+        },
+      });
+    }
+  }, [dispatch, location, socket, userInfo]);
 
   return (
     <BrowserRouter>
@@ -135,6 +162,9 @@ function App() {
                   </li>
                   <li>
                     <Link to='/kpi'>KPI</Link>
+                  </li>
+                  <li>
+                    <Link to='/tracker'>Tracker</Link>
                   </li>
                   <li>
                     <Link to='/productlist'>Products</Link>
@@ -249,6 +279,7 @@ function App() {
             component={DashboardScreen}
           ></AdminRoute>
           <AdminRoute path='/kpi' component={KPIScreen}></AdminRoute>
+          <AdminRoute path='/tracker' component={TrackerScreen}></AdminRoute>
           <AdminRoute path='/support' component={SupportScreen}></AdminRoute>
           <SellerRoute
             path='/productlist/seller'
@@ -260,13 +291,17 @@ function App() {
           ></SellerRoute>
           <Route path='/seller/:id' component={SellerScreen}></Route>
         </main>
-        <footer className='row center'>          
+        <footer className='row center'>
+          {location.loaded
+            ? JSON.stringify(location)
+            : 'Location data not available'}{' '}
+          <br />
           {userInfo && !userInfo.isAdmin && <ChatBox userInfo={userInfo} />}
           <div>All right reserved</div>{' '}
         </footer>
       </div>
     </BrowserRouter>
   );
-}
+};
 
 export default App;

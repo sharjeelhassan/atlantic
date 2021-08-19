@@ -44,9 +44,9 @@ h1 {
 }
 
 h2 {
-    font-size: 1.6rem;
-    padding: 1rem 0;
-  }
+  font-size: 1.6rem;
+  padding: 1rem 0;
+}
 
 a {
   text-decoration: none;
@@ -105,11 +105,11 @@ img.medium {
 }
 
 .price {
-    font-size: 2rem;
+  font-size: 2rem;
 }
 
 /* Rating */
 .rating span {
-    color: #f0c040;
-    margin: 0.1rem;
+  color: #f0c040;
+  margin: 0.1rem;
 }

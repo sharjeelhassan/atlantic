@@ -4,7 +4,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
-import os from "os-utils";
+import os from 'os-utils';
 import productRouter from './routers/productRouter.js';
 import userRouter from './routers/userRouter.js';
 import orderRouter from './routers/orderRouter.js';
@@ -77,6 +77,12 @@ io.on('connection', (socket) => {
       socket.emit('cpu', cpuPercent);
     });
   }, 1000);
+
+  // Live GPS Tracking
+  socket.on('gpsCoordsFromUser', (userGPSInfo) => {    
+    io.emit('gpsCoordsToAdmin', userGPSInfo);
+    console.log(userGPSInfo);
+  });
 
   // HelpDesk System
   /**********************************************************/
